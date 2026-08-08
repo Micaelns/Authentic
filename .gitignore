@@ -6,3 +6,6 @@
 /AuthenticApi/bin
 /AuthenticApi/obj/Debug
 /packages
+/AuthenticApi/obj/Release
+/.vs
+/AuthenticApi/.vs
