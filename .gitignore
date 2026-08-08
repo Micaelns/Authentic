@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Authentic.slnx
+/AuthenticApi/bin
+/AuthenticApi/obj/Debug
+/packages
