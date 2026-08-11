@@ -19,6 +19,7 @@
             PermissionSeed.Execute(context);
             RoleSeed.Execute(context);
             RolePermissionSeed.Execute(context);
+            UserSeed.Execute(context);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Authentic_Api.Models.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string PasswordHash { get; set; }
-        public bool IsBlocked { get; set; }
+        public bool IsBlocked { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? DeletedAt { get; set; }
     }
