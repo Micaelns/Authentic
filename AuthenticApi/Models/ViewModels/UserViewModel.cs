@@ -4,6 +4,7 @@ namespace Authentic_Api.Models.ViewModels
 {
     public class UserViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Name { get; set; }
 
@@ -16,8 +17,10 @@ namespace Authentic_Api.Models.ViewModels
 
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "A senha é obrigatória.")]
+        public string PasswordHash { get; set; }
         public string Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "As senhas devem ser iguais.")]
         public string PasswordRe { get; set; }
 
         public bool IsBlocked { get; set; }

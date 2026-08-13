@@ -13,6 +13,10 @@ namespace AuthenticApi
         {
             var container = new UnityContainer();
 
+            container.RegisterType<AuthenticContext>();
+            container.RegisterType<IUserQueryService, UserQueryService>();
+            container.RegisterType<IUserCommandService, UserCommandService>();
+
             // MVC 5
             DependencyResolver.SetResolver(
                 new Unity.Mvc5.UnityDependencyResolver(container)

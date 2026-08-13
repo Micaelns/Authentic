@@ -1,34 +1,32 @@
-﻿using Authentic_Api.Models.Entities;
-using Authentic_Api.Models.ViewModels;
-using AuthenticApi.App_Data;
-using System.Linq;
+﻿using Authentic_Api.Models.ViewModels;
+using AuthenticApi.Services.UserService;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace AuthenticApi.Controllers
 {
     public class UserController : Controller
     {
-        private readonly AuthenticContext _context;
-        public UserController()
+        private readonly IUserQueryService _userQueryService;
+        private readonly IUserCommandService _userCommandService;
+        public UserController(IUserQueryService userQueryService, IUserCommandService userCommandService)
         {
-            _context = new AuthenticContext();
+            _userQueryService = userQueryService;
+            _userCommandService = userCommandService;
         }
 
         // GET: User
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var users = _context.Users
-                .Where(x => x.DeletedAt == null)
-                .OrderBy(x => x.Name)
-                .ToList();
+            var users = await _userQueryService.GetAllActives();
 
             return View(users);
         }
 
         // GET: User/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var user = await _userQueryService.GetById(id);
 
             if (user is null)
             {
@@ -46,21 +44,12 @@ namespace AuthenticApi.Controllers
         // POST: User/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UserViewModel user)
+        public async Task<ActionResult> Create(UserViewModel user)
         {
             if (!ModelState.IsValid)
                 return View(user);
 
-            if (user.Password != "" && user.Password != user.PasswordRe)
-            {
-                ModelState.AddModelError(
-                    "Password",
-                    "As senhas devem ser iguais."
-                );
-                return View(user);
-            }
-
-            if (_context.Users.Any(x => x.Email == user.Email))
+            if (await _userQueryService.ExistsEmail(user.Email))
             {
                 ModelState.AddModelError(
                     "Email",
@@ -69,10 +58,10 @@ namespace AuthenticApi.Controllers
                 return View(user);
             }
 
-            if (_context.Users.Any(x => x.NickName == user.NickName))
+            if (await _userQueryService.ExistsEmail(user.NickName))
             {
                 ModelState.AddModelError(
-                    "Email",
+                    "NickName",
                     "Este NickName já está cadastrado."
                 );
                 return View(user);
@@ -80,9 +69,7 @@ namespace AuthenticApi.Controllers
 
             try
             {
-                var userDAO = new User() { Name = user.Name, NickName = user.NickName, Email = user.Email, PhoneNumber = user.PhoneNumber, PasswordHash = "WSD#%@$@%%" };
-                _context.Users.Add(userDAO);
-                _context.SaveChanges();
+                await _userCommandService.Create(user);
 
                 return RedirectToAction("Index");
             }
@@ -93,44 +80,27 @@ namespace AuthenticApi.Controllers
         }
 
         // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var userFound = _context.Users.FirstOrDefault(x => x.Id == id);
+            var user = await _userQueryService.GetById(id);
 
-            if (userFound is null)
+            if (user is null)
             {
                 return HttpNotFound();
             }
-            var user = new UserEditViewModel
-            {
-                Id = userFound.Id,
-                Name = userFound.Name,
-                NickName = userFound.NickName,
-                Email = userFound.Email,
-                PhoneNumber = userFound.PhoneNumber,
-                IsBlocked = userFound.IsBlocked
-            };
+
             return View(user);
         }
 
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, UserEditViewModel user)
+        public async Task<ActionResult> Edit(int id, UserViewModel user)
         {
             if (!ModelState.IsValid)
                 return View(user);
 
-            if (user.Password!="" && user.Password != user.PasswordRe)
-            {
-                ModelState.AddModelError(
-                    "Password",
-                    "As senhas devem ser iguais."
-                );
-                return View(user);
-            }
-
-            if (_context.Users.Any(x => x.Id != user.Id && x.Email == user.Email))
+            if (await _userQueryService.ExistsEmail(user.Email, user.Id))
             {
                 ModelState.AddModelError(
                     "Email",
@@ -139,7 +109,7 @@ namespace AuthenticApi.Controllers
                 return View(user);
             }
 
-            if (_context.Users.Any(x => x.Id != user.Id && x.NickName == user.NickName))
+            if (await _userQueryService.ExistsEmail(user.NickName, user.Id))
             {
                 ModelState.AddModelError(
                     "NickName",
@@ -147,8 +117,8 @@ namespace AuthenticApi.Controllers
                 );
                 return View(user);
             }
-            
-            var userDAO = _context.Users.FirstOrDefault(us => us.Id == id);
+
+            var userDAO = await _userQueryService.GetById(id);
             if (userDAO is null)
             {
                 return HttpNotFound();
@@ -156,14 +126,7 @@ namespace AuthenticApi.Controllers
 
             try
             {
-
-                userDAO.Name = user.Name;
-                userDAO.NickName = user.NickName;
-                userDAO.Email = user.Email;
-                userDAO.PhoneNumber = user.PhoneNumber;
-                userDAO.IsBlocked = user.IsBlocked;
-
-                _context.SaveChanges();
+                await _userCommandService.Update(user);
 
                 return RedirectToAction("Index");
             }
@@ -174,40 +137,25 @@ namespace AuthenticApi.Controllers
         }
 
         // GET: User/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var userFound = _context.Users.FirstOrDefault(x => x.Id == id);
+            var userFound = await _userQueryService.GetById(id);
 
             if (userFound is null)
             {
                 return HttpNotFound();
             }
-            var user = new UserEditViewModel
-            {
-                Id = userFound.Id,
-                Email = userFound.Email,
-                NickName = userFound.NickName,
-                PhoneNumber = userFound.PhoneNumber,
-                IsBlocked = userFound.IsBlocked
-            };
-            return View(user);
+            return View(userFound);
         }
 
         // POST: User/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, UserEditViewModel user)
+        public async Task<ActionResult> Delete(int id, UserViewModel user)
         {
             try
             {
-                var userDAO = _context.Users.FirstOrDefault(us => us.Id == id);
-                if (userDAO is null)
-                {
-                    return HttpNotFound();
-                }
-
-                _context.Users.Remove(userDAO);
-                _context.SaveChanges();
+                await _userCommandService.Delete(id);
 
                 return RedirectToAction("Index");
             }
