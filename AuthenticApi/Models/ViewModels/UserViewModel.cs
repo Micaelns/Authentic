@@ -17,7 +17,6 @@ namespace Authentic_Api.Models.ViewModels
 
         public string PhoneNumber { get; set; }
 
-        public string PasswordHash { get; set; }
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "As senhas devem ser iguais.")]

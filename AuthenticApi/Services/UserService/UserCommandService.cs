@@ -1,5 +1,6 @@
 ﻿using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
+using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace AuthenticApi.Services.UserService
     public class UserCommandService : IUserCommandService
     {
         private readonly AuthenticContext _context;
+        private readonly IPasswordHasher _passwordHasher;
 
         public UserCommandService(AuthenticContext context)
         {
             _context = context;
+            _passwordHasher = new PasswordHasher();
         }
 
         private async Task<Entities.User> GetById(int id)
@@ -26,7 +29,8 @@ namespace AuthenticApi.Services.UserService
 
         public async Task Create(UserViewModel user)
         {
-            var userDAO = Entities.User.CreateUser(user.Name, user.NickName, user.Email, user.PhoneNumber, user.PasswordHash, user.IsBlocked);
+            var password = _passwordHasher.HashPassword(user.Password);
+            var userDAO = Entities.User.CreateUser(user.Name, user.NickName, user.Email, user.PhoneNumber, password, user.IsBlocked);
             _context.Users.Add(userDAO);
             _context.SaveChanges();
         }
@@ -35,14 +39,14 @@ namespace AuthenticApi.Services.UserService
         {
             var userDao = await GetById(user.Id) ?? throw new KeyNotFoundException("Usuário não existe.");
 
-            userDao.Name= user.Name;
+            userDao.Name = user.Name;
             userDao.NickName = user.NickName;
             userDao.Email = user.Email;
-            userDao.NickName = userDao.NickName;
-            userDao.PhoneNumber = userDao.PhoneNumber;
-            if (!string.IsNullOrEmpty(userDao.PasswordHash))
+            userDao.NickName = user.NickName;
+            userDao.PhoneNumber = user.PhoneNumber;
+            if (!string.IsNullOrEmpty(user.Password))
             {
-                userDao.PasswordHash = userDao.PasswordHash;
+                userDao.PasswordHash = _passwordHasher.HashPassword(user.Password);
             }
             _context.SaveChanges();
         }

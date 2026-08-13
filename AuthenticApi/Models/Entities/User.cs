@@ -16,11 +16,12 @@ namespace Authentic_Api.Models.Entities
 
         public User() { }
 
-        public User(string name, string nickName, string email, string phoneNumber, string PasswordHash, bool isBlocked)
+        public User(string name, string nickName, string email, string phoneNumber, string passwordHash, bool isBlocked)
         {
             Name = name;
             NickName = nickName;
             Email = email;
+            PasswordHash = passwordHash;
             PhoneNumber = phoneNumber;
             IsBlocked = isBlocked;
         }
