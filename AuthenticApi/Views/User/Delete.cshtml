@@ -1,4 +1,4 @@
-﻿@model Authentic_Api.Models.ViewModels.UserEditViewModel
+﻿@model Authentic_Api.Models.ViewModels.UserViewModel
 
 @{
     ViewBag.Title = "Delete";
@@ -8,7 +8,7 @@
 
 <h3>Realmente deseja deletar?</h3>
 <div>
-    <h4>User</h4>
+    <h4>Usuário</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -56,9 +56,9 @@
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<div class="form-actions no-color">
+    @Html.ActionLink("Voltar", "Index", null, new { @class = "btn btn-secondary" })
+    <input type="submit" value="Deletar" class="btn btn-primary" />
+</div>
     }
 </div>
