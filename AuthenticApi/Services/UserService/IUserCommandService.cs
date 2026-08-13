@@ -1,6 +1,5 @@
 ﻿using Authentic_Api.Models.ViewModels;
 using System.Threading.Tasks;
-using Entities = Authentic_Api.Models.Entities;
 
 namespace AuthenticApi.Services.UserService
 {

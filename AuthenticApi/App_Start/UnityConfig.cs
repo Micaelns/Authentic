@@ -1,4 +1,5 @@
 using AuthenticApi.App_Data;
+using AuthenticApi.Services.SoftwareService;
 using AuthenticApi.Services.UserService;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -15,7 +16,9 @@ namespace AuthenticApi
 
             container.RegisterType<AuthenticContext>();
             container.RegisterType<IUserQueryService, UserQueryService>();
+            container.RegisterType<ISoftwareQueryService, SoftwareQueryService>();
             container.RegisterType<IUserCommandService, UserCommandService>();
+            container.RegisterType<ISoftwareCommandService, SoftwareCommandService>();
 
             // MVC 5
             DependencyResolver.SetResolver(

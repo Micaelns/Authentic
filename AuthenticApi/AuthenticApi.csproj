@@ -153,6 +153,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SoftwareController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -174,8 +176,13 @@
     <Compile Include="Models\Entities\Software.cs" />
     <Compile Include="Models\Entities\User.cs" />
     <Compile Include="Models\Entities\UserRole.cs" />
+    <Compile Include="Models\ViewModels\SoftwareViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\SoftwareService\ISoftwareCommandService.cs" />
+    <Compile Include="Services\SoftwareService\ISoftwareQueryService.cs" />
+    <Compile Include="Services\SoftwareService\SoftwareCommandService.cs" />
+    <Compile Include="Services\SoftwareService\SoftwareQueryService.cs" />
     <Compile Include="Services\UserService\IUserCommandService.cs" />
     <Compile Include="Services\UserService\IUserQueryService.cs" />
     <Compile Include="Services\UserService\UserCommandService.cs" />
@@ -229,6 +236,12 @@
     <Content Include="Views\User\Detalhes.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\Software\Index.cshtml" />
+    <Content Include="Views\Software\Create.cshtml" />
+    <Content Include="Views\Software\Edit.cshtml" />
+    <Content Include="Views\Software\Details.cshtml" />
+    <Content Include="Views\Software\Delete.cshtml" />
+    <Content Include="Views\Home\Home.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

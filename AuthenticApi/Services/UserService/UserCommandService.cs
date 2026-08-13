@@ -32,7 +32,7 @@ namespace AuthenticApi.Services.UserService
             var password = _passwordHasher.HashPassword(user.Password);
             var userDAO = Entities.User.CreateUser(user.Name, user.NickName, user.Email, user.PhoneNumber, password, user.IsBlocked);
             _context.Users.Add(userDAO);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(UserViewModel user)
@@ -56,7 +56,6 @@ namespace AuthenticApi.Services.UserService
             var userDao = await GetById(id) ?? throw new KeyNotFoundException("Usuário não existe.");
             _context.Users.Remove(userDao);
             _context.SaveChanges();
-
         }
     }
 }
