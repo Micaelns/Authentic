@@ -29,8 +29,6 @@ namespace AuthenticApi.Services.SoftwareService
                 })
                .OrderBy(sof => sof.Name)
                .ToListAsync();
-
-
         }
 
         public async Task<SoftwareViewModel> GetById(int Id)

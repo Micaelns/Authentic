@@ -1,6 +1,7 @@
 ﻿using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace AuthenticApi.Services.UserService
         public async Task Delete(int id)
         {
             var userDao = await GetById(id) ?? throw new KeyNotFoundException("Usuário não existe.");
-            _context.Users.Remove(userDao);
+            userDao.DeletedAt = DateTime.UtcNow;
             _context.SaveChanges();
         }
     }

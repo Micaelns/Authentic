@@ -29,6 +29,11 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
+            <a href="@Url.RouteUrl("SoftwareRoles",new { softwareId=item.Id , action = "Index"})"
+               class="btn btn-outline-primary btn-sm"
+               title="Acessos">
+                <i class="bi bi-file-earmark-person"></i>
+            </a>
             <a href="@Url.Action("Edit","Software", new { id = item.Id })"
                class="btn btn-outline-secondary btn-sm"
                title="Editar">

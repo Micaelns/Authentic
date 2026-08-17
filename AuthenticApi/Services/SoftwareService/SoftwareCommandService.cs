@@ -1,6 +1,7 @@
 ﻿using Authentic_Api.Models.Entities;
 using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace AuthenticApi.Services.SoftwareService
         public async Task Delete(int id)
         {
             var softwareDao = await GetById(id) ?? throw new KeyNotFoundException("Software não existe.");
-            _context.Softwares.Remove(softwareDao);
+            softwareDao.DeletedAt = DateTime.UtcNow;
             _context.SaveChanges();
         }
     }
