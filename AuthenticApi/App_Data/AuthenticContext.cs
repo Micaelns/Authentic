@@ -16,5 +16,20 @@ namespace AuthenticApi.App_Data
         public DbSet<User> Users { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Role>()
+                    .HasMany(x => x.RolePermissions)
+                    .WithRequired(x => x.Role)
+                    .HasForeignKey(x => x.RoleId)
+                    .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<User>()
+                    .HasMany(x => x.UserRoles)
+                    .WithRequired(x => x.User)
+                    .HasForeignKey(x => x.UserId)
+                    .WillCascadeOnDelete(true);
+        }
     }
 }

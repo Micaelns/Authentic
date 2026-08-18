@@ -1,0 +1,56 @@
+﻿@model Authentic_Api.Models.ViewModels.RoleViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Realmente deseja deletar?</h3>
+<div>
+    <h4>Role</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Nome Software
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Software.Name)
+        </dd>
+
+        <dt>
+            Nome Acesso
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            Permissões
+        </dt>
+
+        <dd>
+            <div class="row justify-content-start mt-2">
+                @for (int i = 0; i < Model.Permissions.Count; i++)
+                {
+                    <label class="checkbox col-12 col-sm-6 col-lg-4" title="@Html.DisplayFor(model => model.Permissions[i].Description)">
+                        @Html.DisplayFor(model => Model.Permissions[i].Code)
+                    </label>
+                }
+            </div>
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Voltar", "Index", null, new { @class = "btn btn-secondary" })
+            <input type="submit" value="Deletar" class="btn btn-primary" />
+        </div>
+    }
+</div>
