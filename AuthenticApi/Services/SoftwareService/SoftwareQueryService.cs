@@ -31,6 +31,24 @@ namespace AuthenticApi.Services.SoftwareService
                .ToListAsync();
         }
 
+        public async Task<IEnumerable<SoftwareRolesCheckViewModel>> GetAllActivesWithRoles()
+        {
+            return await _context.Softwares
+                .AsNoTracking()
+                .Where(sof => sof.DeletedAt == null)
+                .OrderBy(sof => sof.Name)
+                .Select(sof => new SoftwareRolesCheckViewModel
+                {
+                    Software = new SoftwareViewModel { Id = sof.Id, Name = sof.Name, Description = sof.Description },
+                    Roles = sof.Roles.Select(element => new RoleCheckViewModel
+                    {
+                        Id = element.Id,
+                        Name = element.Name
+                    }).ToList()
+                })
+               .ToListAsync();
+        }
+
         public async Task<SoftwareViewModel> GetById(int Id)
         {
             return await _context.Softwares

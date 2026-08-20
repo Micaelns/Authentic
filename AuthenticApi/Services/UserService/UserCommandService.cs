@@ -45,6 +45,7 @@ namespace AuthenticApi.Services.UserService
             userDao.Email = user.Email;
             userDao.NickName = user.NickName;
             userDao.PhoneNumber = user.PhoneNumber;
+            userDao.IsBlocked = user.IsBlocked;
             if (!string.IsNullOrEmpty(user.Password))
             {
                 userDao.PasswordHash = _passwordHasher.HashPassword(user.Password);

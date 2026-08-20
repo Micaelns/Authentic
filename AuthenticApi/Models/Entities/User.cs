@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Authentic_Api.Models.Entities
 {
@@ -11,6 +12,7 @@ namespace Authentic_Api.Models.Entities
         public string PhoneNumber { get; set; }
         public string PasswordHash { get; set; }
         public bool IsBlocked { get; set; } = false;
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? DeletedAt { get; set; }
 

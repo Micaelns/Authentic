@@ -25,6 +25,7 @@ namespace AuthenticApi
             container.RegisterType<IUserCommandService, UserCommandService>();
             container.RegisterType<ISoftwareCommandService, SoftwareCommandService>();
             container.RegisterType<IRoleCommandService, RoleCommandService>();
+            container.RegisterType<IUserAccessCommandService, UserAccessCommandService>();
 
             // MVC 5
             DependencyResolver.SetResolver(

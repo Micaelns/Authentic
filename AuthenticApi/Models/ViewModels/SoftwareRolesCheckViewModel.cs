@@ -2,9 +2,10 @@
 
 namespace Authentic_Api.Models.ViewModels
 {
-    public class SoftwareRolesViewModel
+    public class SoftwareRolesCheckViewModel
     {
         public SoftwareViewModel Software { get; set; }
-        public List<RoleViewModel> Roles { get; set; }
+        public List<RoleCheckViewModel> Roles { get; set; }
+
     }
 }

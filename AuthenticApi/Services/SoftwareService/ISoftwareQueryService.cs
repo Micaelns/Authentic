@@ -8,5 +8,6 @@ namespace AuthenticApi.Services.SoftwareService
     {
         Task<SoftwareViewModel> GetById(int Id);
         Task<IEnumerable<SoftwareViewModel>> GetAllActives();
+        Task<IEnumerable<SoftwareRolesCheckViewModel>> GetAllActivesWithRoles();
     }
 }

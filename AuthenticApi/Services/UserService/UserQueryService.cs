@@ -60,5 +60,41 @@ namespace AuthenticApi.Services.UserService
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<UserRolesViewModel> GetAccessById(int Id)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(x => x.DeletedAt == null && x.Id == Id)
+                .Select(x => new UserRolesViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    NickName = x.NickName,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
+                    IsBlocked = x.IsBlocked,
+                    Roles = x.UserRoles.Select( iten => new RoleViewModel
+                    {
+                        Id = iten.Role.Id,
+                        Name = iten.Role.Name,
+                        SoftwareId = iten.Role.SoftwareId,
+                        Software = new SoftwareViewModel
+                        {
+                            Id = iten.Role.Software.Id,
+                            Name = iten.Role.Software.Name,
+                            Description = iten.Role.Software.Description
+                        },
+                        Permissions = iten.Role.RolePermissions.Select( itemRole => new PermissionViewModel
+                        {
+                            Id = itemRole.Permission.Id,
+                            Code = itemRole.Permission.Code,
+                            Description = itemRole.Permission.Description
+                        }).ToList()
+                    })
+                })
+                .FirstOrDefaultAsync();
+        }
+
     }
 }

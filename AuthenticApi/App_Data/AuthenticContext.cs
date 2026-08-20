@@ -25,6 +25,12 @@ namespace AuthenticApi.App_Data
                     .HasForeignKey(x => x.RoleId)
                     .WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<Software>()
+                    .HasMany(x => x.Roles)
+                    .WithRequired(x => x.Software)
+                    .HasForeignKey(x => x.SoftwareId)
+                    .WillCascadeOnDelete(true);
+
             modelBuilder.Entity<User>()
                     .HasMany(x => x.UserRoles)
                     .WithRequired(x => x.User)

@@ -1,5 +1,8 @@
 ﻿using Authentic_Api.Models.ViewModels;
+using AuthenticApi.Services.RoleService;
+using AuthenticApi.Services.SoftwareService;
 using AuthenticApi.Services.UserService;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -9,10 +12,16 @@ namespace AuthenticApi.Controllers
     {
         private readonly IUserQueryService _userQueryService;
         private readonly IUserCommandService _userCommandService;
-        public UserController(IUserQueryService userQueryService, IUserCommandService userCommandService)
+        private readonly IUserAccessCommandService _userAccessCommandService;
+        private readonly IRoleQueryService _roleQueryService;
+        private readonly ISoftwareQueryService _softwareQueryService;
+        public UserController(IUserQueryService userQueryService, IUserCommandService userCommandService, ISoftwareQueryService softwareQueryService, IRoleQueryService roleQueryService, IUserAccessCommandService userAccessCommandService)
         {
             _userQueryService = userQueryService;
             _userCommandService = userCommandService;
+            _userAccessCommandService = userAccessCommandService;
+            _softwareQueryService = softwareQueryService;
+            _roleQueryService = roleQueryService;
         }
 
         // GET: User
@@ -79,6 +88,51 @@ namespace AuthenticApi.Controllers
             }
         }
 
+        // GET: User/AccessSoftware/5
+        public async Task<ActionResult> AccessSoftware(int id)
+        {
+            var user = await _userQueryService.GetAccessById(id);
+
+            if (user is null)
+            {
+                return HttpNotFound();
+            }
+
+            var softwares = await _softwareQueryService.GetAllActivesWithRoles();
+
+            foreach (var software in softwares)
+            {
+                foreach (var role in software.Roles)
+                {
+                    if ( user.Roles.Any(iten => iten.Id == role.Id) )
+                    {
+                        role.IsChecked = true;
+                    }
+                }
+            }
+
+            var userSoftware = new UserSoftwareViewModel
+            {
+                Softwares = softwares
+                                .Where(x => x.Roles.Count > 0)
+                                .ToList(),
+                User = user,
+            };
+
+            return View(userSoftware);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AccessSoftware(int id, UserSoftwareViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _userAccessCommandService.Update(model);
+
+            return RedirectToAction("Index");
+        }
         // GET: User/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
