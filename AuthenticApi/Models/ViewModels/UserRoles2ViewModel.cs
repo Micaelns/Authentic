@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Authentic_Api.Models.ViewModels;
+using System.Collections.Generic;
 
-namespace Authentic_Api.Models.ViewModels
+namespace AuthenticApi.Models.ViewModels
 {
-    public class UserRolesViewModel
+    public class UserRoles2ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,7 +15,6 @@ namespace Authentic_Api.Models.ViewModels
         public string PhoneNumber { get; set; }
 
         public bool IsBlocked { get; set; }
-        public IEnumerable<RoleViewModel> Roles { get; set; }
-        public List<RoleViewModel> Roles1 { get; set; }
+        public List<RoleViewModel> Roles { get; set; }
     }
 }

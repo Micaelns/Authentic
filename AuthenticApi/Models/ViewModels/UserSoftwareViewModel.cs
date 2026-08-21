@@ -1,5 +1,4 @@
-﻿using AuthenticApi.Models.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Authentic_Api.Models.ViewModels
 {

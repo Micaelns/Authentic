@@ -35,12 +35,14 @@ namespace AuthenticApi.Controllers
         // GET: User/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var user = await _userQueryService.GetById(id);
+            var user = await _userQueryService.GetAccessById(id);
 
             if (user is null)
             {
                 return HttpNotFound();
             }
+            user.Roles1= user.Roles.ToList();
+
             return View("Detalhes", user);
         }
 
