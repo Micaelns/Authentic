@@ -181,15 +181,11 @@
     <Compile Include="Models\ViewModels\PermissionViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleCheckViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleCreateViewModel.cs" />
-    <Compile Include="Models\ViewModels\RolePermissionViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleViewModel.cs" />
     <Compile Include="Models\ViewModels\SoftwareRolesCheckViewModel.cs" />
     <Compile Include="Models\ViewModels\SoftwareRolesViewModel.cs" />
     <Compile Include="Models\ViewModels\SoftwareViewModel.cs" />
-    <Compile Include="Models\ViewModels\UserAccessViewModel.cs" />
-    <Compile Include="Models\ViewModels\UserRoles2ViewModel.cs" />
     <Compile Include="Models\ViewModels\UserRolesViewModel.cs" />
-    <Compile Include="Models\ViewModels\UserShowViewModel.cs" />
     <Compile Include="Models\ViewModels\UserSoftwareViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

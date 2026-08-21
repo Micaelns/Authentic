@@ -53,20 +53,19 @@
         <dt>
             Sistemas e acessos
         </dt>
-
         <dd>
-            @for (int i = 0; i < Model.Roles1.Count; i++)
+            @foreach (var item in Model.Roles)
             {
                 <b>
-                    @Html.DisplayFor(model => Model.Roles1[i].Software.Name) -
-                    <i>@Html.DisplayFor(model => Model.Roles1[i].Name)</i>
+                    @Html.DisplayFor(model => item.Software.Name) -
+                    <i>@Html.DisplayFor(model => item.Name)</i>
                 </b>
                 <div class="form-group">
                     <div class="row justify-content-start mt-2">
-                        @for (int j = 0; j < Model.Roles1[i].Permissions.Count; j++)
+                        @foreach (var itemPermission in item.Permissions)
                         {
                             <div class=" col-12 col-sm-6 col-lg-3">
-                                @Html.DisplayFor(model => Model.Roles1[i].Permissions[j].Code)
+                                @Html.DisplayFor(model => itemPermission.Code)
                             </div>
                         }
                     </div>

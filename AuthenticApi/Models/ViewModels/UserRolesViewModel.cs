@@ -15,6 +15,5 @@ namespace Authentic_Api.Models.ViewModels
 
         public bool IsBlocked { get; set; }
         public IEnumerable<RoleViewModel> Roles { get; set; }
-        public List<RoleViewModel> Roles1 { get; set; }
     }
 }

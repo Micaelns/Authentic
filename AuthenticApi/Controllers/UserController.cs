@@ -41,7 +41,6 @@ namespace AuthenticApi.Controllers
             {
                 return HttpNotFound();
             }
-            user.Roles1= user.Roles.ToList();
 
             return View("Detalhes", user);
         }
