@@ -1,4 +1,5 @@
 ﻿using Authentic_Api.Models.ViewModels;
+using AuthenticApi.Mappings;
 using AuthenticApi.Services.RoleService;
 using AuthenticApi.Services.SoftwareService;
 using AuthenticApi.Services.UserService;
@@ -42,7 +43,7 @@ namespace AuthenticApi.Controllers
                 return HttpNotFound();
             }
 
-            return View("Detalhes", user);
+            return View("Detalhes", UserMapper.ToUserRolesViewModel(user));
         }
 
         // GET: User/Create
@@ -92,12 +93,14 @@ namespace AuthenticApi.Controllers
         // GET: User/AccessSoftware/5
         public async Task<ActionResult> AccessSoftware(int id)
         {
-            var user = await _userQueryService.GetAccessById(id);
+            var userDTO = await _userQueryService.GetAccessById(id);
+            var user = UserMapper.ToUserRolesViewModel(userDTO);
 
             if (user is null)
             {
                 return HttpNotFound();
             }
+            
 
             var softwares = await _softwareQueryService.GetAllActivesWithRoles();
 

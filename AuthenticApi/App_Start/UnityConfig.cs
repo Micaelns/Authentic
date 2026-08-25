@@ -1,4 +1,5 @@
 using AuthenticApi.App_Data;
+using AuthenticApi.Services.AuthService;
 using AuthenticApi.Services.PermissionService;
 using AuthenticApi.Services.RoleService;
 using AuthenticApi.Services.SoftwareService;
@@ -26,9 +27,12 @@ namespace AuthenticApi
             container.RegisterType<ISoftwareCommandService, SoftwareCommandService>();
             container.RegisterType<IRoleCommandService, RoleCommandService>();
             container.RegisterType<IUserAccessCommandService, UserAccessCommandService>();
+            container.RegisterType<IAuthQueryService, AuthQueryService>();
+            container.RegisterType<IJwtTokenService, JwtTokenService>();
 
-            // MVC 5
-            DependencyResolver.SetResolver(
+
+        // MVC 5
+        DependencyResolver.SetResolver(
                 new Unity.Mvc5.UnityDependencyResolver(container)
             );
 

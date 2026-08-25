@@ -1,5 +1,8 @@
 ﻿using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
+using AuthenticApi.DTOs.Roles;
+using AuthenticApi.DTOs.Softwares;
+using AuthenticApi.DTOs.Users;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -61,12 +64,12 @@ namespace AuthenticApi.Services.UserService
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<UserRolesViewModel> GetAccessById(int Id)
+        public async Task<UserDTO> GetAccessById(int Id)
         {
             return await _context.Users
                 .AsNoTracking()
                 .Where(x => x.DeletedAt == null && x.Id == Id)
-                .Select(x => new UserRolesViewModel
+                .Select(x => new UserDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -74,27 +77,25 @@ namespace AuthenticApi.Services.UserService
                     Email = x.Email,
                     PhoneNumber = x.PhoneNumber,
                     IsBlocked = x.IsBlocked,
-                    Roles = x.UserRoles.Select( iten => new RoleViewModel
+                    Roles = x.UserRoles.Select(iten => new RoleDTO
                     {
                         Id = iten.Role.Id,
                         Name = iten.Role.Name,
-                        SoftwareId = iten.Role.SoftwareId,
-                        Software = new SoftwareViewModel
+                        Software = new SoftwareDTO
                         {
                             Id = iten.Role.Software.Id,
                             Name = iten.Role.Software.Name,
                             Description = iten.Role.Software.Description
                         },
-                        Permissions = iten.Role.RolePermissions.Select( itemRole => new PermissionViewModel
+                        Permissions = iten.Role.RolePermissions.Select(itemRole => new PermissionViewModel
                         {
                             Id = itemRole.Permission.Id,
                             Code = itemRole.Permission.Code,
                             Description = itemRole.Permission.Description
-                        }).ToList()
+                        })
                     })
                 })
                 .FirstOrDefaultAsync();
         }
-
     }
 }
