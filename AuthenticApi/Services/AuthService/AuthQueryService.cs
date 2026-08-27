@@ -6,6 +6,7 @@ using AuthenticApi.DTOs.Users;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +36,8 @@ namespace AuthenticApi.Services.AuthService
                     PasswordHash = item.PasswordHash,
                     Roles = item.UserRoles.Select(itemRole => new RoleSimpleDTO
                     {
-                        Name = itemRole.Role.Name
+                        Name = itemRole.Role.Name,
+                        SoftwareId = itemRole.Role.SoftwareId
                     })
                 })
                 .FirstOrDefaultAsync();
@@ -49,12 +51,17 @@ namespace AuthenticApi.Services.AuthService
                 throw new Exception("Usuário Bloqueado temporariamente");
             }
 
+            if ( loginDTO.SoftwareId != 0 && !user.Roles.Any( item => item.SoftwareId == loginDTO.SoftwareId ))
+            {
+                throw new Exception("Usuário sem acesso a esse sistema. Fale com um Adminstrador.");
+            }
+
             return new UserLogedDTO
             {
                 Name = user.Name,
                 NickName= user.NickName,
                 Email = user.Email,
-                Roles = user.Roles
+                Roles = user.Roles.Where(item => loginDTO.SoftwareId == 0 || loginDTO.SoftwareId == item.SoftwareId)
             };
         }
 

@@ -4,7 +4,6 @@ using AuthenticApi.Services.RoleService;
 using AuthenticApi.Services.SoftwareService;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -30,7 +29,7 @@ namespace AuthenticApi.Controllers
             var viewModel = new SoftwareRolesViewModel
             {
                 Software = await _softwareQueryService.GetById(softwareId),
-                Roles = (List<RoleViewModel>) await _roleQueryService.GetActiveRolesBySoftwareId(softwareId)
+                Roles = (List<RoleViewModel>)await _roleQueryService.GetActiveRolesBySoftwareId(softwareId)
             };
             return View(viewModel);
         }
