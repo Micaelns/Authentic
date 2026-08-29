@@ -1,7 +1,4 @@
-﻿using AuthenticApi.DTOs.Roles;
-using System.Collections.Generic;
-
-namespace AuthenticApi.DTOs.Users
+﻿namespace AuthenticApi.DTOs.Users
 {
     public class UserLogedDTO
     {
@@ -10,6 +7,5 @@ namespace AuthenticApi.DTOs.Users
         public string NickName { get; set; }
 
         public string Email { get; set; }
-        public IEnumerable<RoleSimpleDTO> Roles { get; set; }
     }
 }

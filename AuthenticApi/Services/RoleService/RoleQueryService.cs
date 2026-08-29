@@ -1,6 +1,6 @@
 ﻿using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
-using System;
+using AuthenticApi.DTOs.Roles;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -49,6 +49,23 @@ namespace AuthenticApi.Services.RoleService
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<RoleExternal>> GetSimpleRolesBySoftwareId(int userId, int softwareId)
+        {
+            var roles = await _context.Roles
+                .AsNoTracking()
+                .Where(role => role.DeletedAt == null && role.SoftwareId == softwareId)
+                .Where(role => role.UserRoles.Any(ur => ur.UserId == userId && ur.RoleId == role.Id))
+                .Select(role => new RoleExternal()
+                {
+                    Name = role.Name,
+                    SoftwareId = role.SoftwareId,
+                    Permissions = role.RolePermissions.Select(Rpermission => Rpermission.Permission.Code).ToList()
+                })
+                .OrderBy(role => role.Name)
+               .ToListAsync();
+
+            return roles.Where(item => item.Permissions.Count > 0);
         }
     }
 }

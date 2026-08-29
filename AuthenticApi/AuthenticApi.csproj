@@ -224,6 +224,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Api\AuthController.cs" />
+    <Compile Include="Controllers\Api\RoleController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="DTOs\Auth\LoginDTO.cs" />
     <Compile Include="DTOs\Auth\TokenDTO.cs" />
     <Compile Include="DTOs\Roles\RoleDTO.cs" />
+    <Compile Include="DTOs\Roles\RoleExternal.cs" />
     <Compile Include="DTOs\Roles\RoleSimpleDTO.cs" />
     <Compile Include="DTOs\Softwares\SoftwareDTO.cs" />
     <Compile Include="DTOs\Users\UserDTO.cs" />

@@ -20,10 +20,6 @@ namespace AuthenticApi.Services.AuthService
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email) 
             };
-            foreach (var role in user.Roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-            }
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSecret));

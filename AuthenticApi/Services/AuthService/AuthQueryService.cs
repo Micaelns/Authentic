@@ -1,12 +1,10 @@
-﻿using Authentic_Api.Models.Entities;
-using AuthenticApi.App_Data;
+﻿using AuthenticApi.App_Data;
 using AuthenticApi.DTOs.Auth;
 using AuthenticApi.DTOs.Roles;
 using AuthenticApi.DTOs.Users;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,7 +59,6 @@ namespace AuthenticApi.Services.AuthService
                 Name = user.Name,
                 NickName= user.NickName,
                 Email = user.Email,
-                Roles = user.Roles.Where(item => loginDTO.SoftwareId == 0 || loginDTO.SoftwareId == item.SoftwareId)
             };
         }
 
