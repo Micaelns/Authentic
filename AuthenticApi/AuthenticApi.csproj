@@ -233,7 +233,7 @@
     <Compile Include="DTOs\Auth\LoginDTO.cs" />
     <Compile Include="DTOs\Auth\TokenDTO.cs" />
     <Compile Include="DTOs\Roles\RoleDTO.cs" />
-    <Compile Include="DTOs\Roles\RoleExternal.cs" />
+    <Compile Include="DTOs\Roles\RoleListPermissionDTO.cs" />
     <Compile Include="DTOs\Roles\RoleSimpleDTO.cs" />
     <Compile Include="DTOs\Softwares\SoftwareDTO.cs" />
     <Compile Include="DTOs\Users\UserDTO.cs" />

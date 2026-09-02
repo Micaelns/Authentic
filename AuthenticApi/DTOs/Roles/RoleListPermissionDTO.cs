@@ -2,10 +2,9 @@
 
 namespace AuthenticApi.DTOs.Roles
 {
-    public class RoleExternal
+    public class RoleListPermissionDTO
     {
         public string Name { get; set; }
-        public int SoftwareId { get; set; }
         public List<string> Permissions;
     }
 }

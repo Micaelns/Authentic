@@ -1,9 +1,7 @@
-﻿using AuthenticApi.Services.PermissionService;
-using AuthenticApi.Services.RoleService;
+﻿using AuthenticApi.Services.RoleService;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
 
 namespace AuthenticApi.Controllers.Api
 {
@@ -18,9 +16,22 @@ namespace AuthenticApi.Controllers.Api
 
         [Route("user/{userId}")]
         [HttpGet]
-        public async Task<IHttpActionResult> OfUser(int userId, int softwareId)
+        public async Task<IHttpActionResult> OfUser(int userId, int? softwareId = null)
         {
-            var result = await _roleQueryService.GetSimpleRolesBySoftwareId(userId, softwareId);
+            var result = await _roleQueryService.GetSimpleRolesBySoftwareId(userId, softwareId??0);
+
+            if (result.Count() == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Route("software/{softwareId}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> Software(int softwareId)
+        {
+            var result = await _roleQueryService.GetRolesListPermissionBySoftwareId(softwareId);
 
             if (result.Count() == 0)
             {

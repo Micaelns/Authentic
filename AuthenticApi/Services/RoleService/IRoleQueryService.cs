@@ -10,6 +10,7 @@ namespace AuthenticApi.Services.RoleService
     {
         Task<RoleViewModel> GetById(int id);
         Task<IEnumerable<RoleViewModel>> GetActiveRolesBySoftwareId(int softwareId);
-        Task<IEnumerable<RoleExternal>> GetSimpleRolesBySoftwareId(int userId, int softwareId);
+        Task<IEnumerable<RoleListPermissionDTO>> GetRolesListPermissionBySoftwareId(int softwareId);
+        Task<IEnumerable<RoleSimpleDTO>> GetSimpleRolesBySoftwareId(int userId, int softwareId);
     }
 }

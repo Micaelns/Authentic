@@ -27,6 +27,7 @@ namespace AuthenticApi.Services.AuthService
                 .Where(item => item.DeletedAt == null && item.Email == loginDTO.Email)
                 .Select(item => new UserLogingDTO
                 {
+                    Id = item.Id,
                     Name = item.Name,
                     Email = item.Email,
                     IsBlocked = item.IsBlocked,
@@ -56,6 +57,7 @@ namespace AuthenticApi.Services.AuthService
 
             return new UserLogedDTO
             {
+                Id = user.Id,
                 Name = user.Name,
                 NickName= user.NickName,
                 Email = user.Email,

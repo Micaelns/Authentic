@@ -5,6 +5,7 @@ namespace AuthenticApi.DTOs.Users
 {
     public class UserLogingDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public string NickName { get; set; }

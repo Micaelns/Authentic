@@ -1,4 +1,5 @@
-﻿using Authentic_Api.Models.ViewModels;
+﻿using Authentic_Api.Models.Entities;
+using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
 using AuthenticApi.DTOs.Roles;
 using System.Collections.Generic;
@@ -50,22 +51,34 @@ namespace AuthenticApi.Services.RoleService
                 })
                 .FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<RoleExternal>> GetSimpleRolesBySoftwareId(int userId, int softwareId)
+
+        public async Task<IEnumerable<RoleListPermissionDTO>> GetRolesListPermissionBySoftwareId(int softwareId)
         {
-            var roles = await _context.Roles
+            return await _context.Roles
                 .AsNoTracking()
                 .Where(role => role.DeletedAt == null && role.SoftwareId == softwareId)
-                .Where(role => role.UserRoles.Any(ur => ur.UserId == userId && ur.RoleId == role.Id))
-                .Select(role => new RoleExternal()
+                .Select(role => new RoleListPermissionDTO()
                 {
                     Name = role.Name,
-                    SoftwareId = role.SoftwareId,
-                    Permissions = role.RolePermissions.Select(Rpermission => Rpermission.Permission.Code).ToList()
+                    Permissions = role.RolePermissions.Select(rp => rp.Permission.Code).ToList()
+                })
+                .OrderBy(role => role.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<RoleSimpleDTO>> GetSimpleRolesBySoftwareId(int userId, int softwareId)
+        {
+            return await _context.Roles
+                .AsNoTracking()
+                .Where(role => role.DeletedAt == null && (role.SoftwareId == softwareId || softwareId == 0) )
+                .Where(role => role.UserRoles.Any(ur => ur.UserId == userId && ur.RoleId == role.Id))
+                .Select(role => new RoleSimpleDTO()
+                {
+                    Name = role.Name,
+                    SoftwareId = role.SoftwareId
                 })
                 .OrderBy(role => role.Name)
                .ToListAsync();
-
-            return roles.Where(item => item.Permissions.Count > 0);
         }
     }
 }
