@@ -16,9 +16,10 @@ namespace AuthenticApi.Services.AuthService
             var jwtSecret = ConfigurationManager.AppSettings["JwtSecret"];
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.NickName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email) 
+                new Claim(ClaimTypes.GivenName, user.NickName),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var key = new SymmetricSecurityKey(
@@ -31,7 +32,9 @@ namespace AuthenticApi.Services.AuthService
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(15),
-                signingCredentials: credentials);
+                signingCredentials: credentials,
+                issuer: ConfigurationManager.AppSettings["JwtIssuer"]
+                );
 
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);

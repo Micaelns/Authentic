@@ -39,8 +39,9 @@ namespace AuthenticApi
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidIssuer = ConfigurationManager.AppSettings["JwtIssuer"],
                     };
 
                     var principal = handler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);

@@ -13,6 +13,7 @@ namespace AuthenticApi.Controllers.Api
             _userQueryService = userQueryService;
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> Get(int id)
         {
             var result = await _userQueryService.GetAccessById(id);

@@ -32,7 +32,7 @@ namespace AuthenticApi.Migrations.Seeds
                 .First(x => x.Code == "update.VehicleType");
 
             var deleteVehicleType = context.Permissions
-                .First(x => x.Code == "deletar.VehicleType");
+                .First(x => x.Code == "delete.VehicleType");
 
             var createVehicle = context.Permissions
                 .First(x => x.Code == "create.vehicle"); 
@@ -53,10 +53,10 @@ namespace AuthenticApi.Migrations.Seeds
                 .First(x => x.Code == "create.Destination");
 
             var startVehicleTravel = context.Permissions
-                .First(x => x.Code == "start.vehicle.Travel");
+                .First(x => x.Code == "start.vehicleTravel");
 
             var endsVehicleTravel = context.Permissions
-                .First(x => x.Code == "ends.vehicle.Travel");
+                .First(x => x.Code == "ends.vehicleTravel");
 
             ExecuteNewPermission(context, driveRole.Id, createDestination.Id);
             ExecuteNewPermission(context, driveRole.Id, startVehicleTravel.Id);
@@ -78,16 +78,16 @@ namespace AuthenticApi.Migrations.Seeds
                 .First(x => x.Code == "update.VehicleType");
 
             var deleteVehicleType = context.Permissions
-                .First(x => x.Code == "deletar.VehicleType");
+                .First(x => x.Code == "delete.VehicleType");
 
             var createVehicle = context.Permissions
                 .First(x => x.Code == "create.vehicle");
 
             var startVehicleTravel = context.Permissions
-                .First(x => x.Code == "start.vehicle.Travel");
+                .First(x => x.Code == "start.vehicleTravel");
 
             var endsVehicleTravel = context.Permissions
-                .First(x => x.Code == "ends.vehicle.Travel");
+                .First(x => x.Code == "ends.vehicleTravel");
 
             ExecuteNewPermission(context, adminRole.Id, createDestination.Id);
             ExecuteNewPermission(context, adminRole.Id, createVehicleType.Id);
