@@ -1,5 +1,4 @@
-﻿using Authentic_Api.Models.Entities;
-using Authentic_Api.Models.ViewModels;
+﻿using Authentic_Api.Models.ViewModels;
 using AuthenticApi.App_Data;
 using AuthenticApi.DTOs.Roles;
 using System.Collections.Generic;

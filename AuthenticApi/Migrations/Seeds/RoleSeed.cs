@@ -1,10 +1,6 @@
 ﻿using Authentic_Api.Models.Entities;
 using AuthenticApi.App_Data;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Web;
 
 namespace AuthenticApi.Migrations.Seeds
 {

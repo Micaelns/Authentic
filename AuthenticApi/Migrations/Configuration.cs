@@ -1,7 +1,6 @@
 ﻿namespace AuthenticApi.Migrations
 {
     using AuthenticApi.Migrations.Seeds;
-    using System;
     using System.Data.Entity.Migrations;
 
     internal sealed class Configuration : DbMigrationsConfiguration<AuthenticApi.App_Data.AuthenticContext>
