@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace AuthenticApi.Services.AuthService
 {
-    public class TokenGenerator : ITokenGenerator
+    public class RefreshTokenGenerator : IRefreshTokenGenerator
     {
         public string Generate()
         {

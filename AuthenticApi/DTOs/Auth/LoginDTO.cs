@@ -4,6 +4,7 @@
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public string DeviceId { get; set; } = string.Empty;
         public int SoftwareId { get; set; } = 0; 
     }
 }

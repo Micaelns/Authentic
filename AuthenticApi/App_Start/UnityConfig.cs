@@ -29,9 +29,10 @@ namespace AuthenticApi
             container.RegisterType<IUserAccessCommandService, UserAccessCommandService>();
             container.RegisterType<IAuthQueryService, AuthQueryService>();
             container.RegisterType<IJwtTokenService, JwtTokenService>();
-            container.RegisterType<ITokenGenerator, TokenGenerator>();
+            container.RegisterType<IRefreshTokenGenerator, RefreshTokenGenerator>();
             container.RegisterType<IRefreshTokenService, RefreshTokenService>();
-
+            container.RegisterType<ITokenHasher, Sha256TokenHasher>();
+            container.RegisterType<IAuthenticationService, AuthenticationService>();
 
         // MVC 5
         DependencyResolver.SetResolver(

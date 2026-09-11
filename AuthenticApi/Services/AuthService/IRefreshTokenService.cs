@@ -7,8 +7,8 @@ namespace AuthenticApi.Services.AuthService
 
     public interface IRefreshTokenService
     {
-        Task<RefreshToken> Generate(UserLogedDTO user, string deviceId);
-        Task<RefreshToken> RefreshAsync(string refreshToken, string deviceId);
+        Task<string> Generate(UserLogedDTO user, string deviceId);
+        Task<(User, string)> RotateAsync(string refreshToken, string deviceId);
         Task RevokeTokenAsync(string refreshToken, string deviceId);
     }
 }

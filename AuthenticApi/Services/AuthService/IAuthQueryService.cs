@@ -7,6 +7,5 @@ namespace AuthenticApi.Services.AuthService
     public interface IAuthQueryService
     {
         Task<UserLogedDTO> Logon(LoginDTO loginDTO);
-        Task Logout(string token);
     }
 }

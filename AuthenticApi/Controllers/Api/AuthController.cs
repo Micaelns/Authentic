@@ -1,5 +1,5 @@
 ﻿using AuthenticApi.DTOs.Auth;
-using AuthenticApi.DTOs.Users;
+using AuthenticApi.Exceptions;
 using AuthenticApi.Services.AuthService;
 using System;
 using System.Net;
@@ -12,15 +12,11 @@ namespace AuthenticApi.Controllers.Api
     [RoutePrefix("api/v1/Auth")]
     public class AuthController : ApiController
     {
-        private readonly IAuthQueryService _authQueryService;
-        private readonly IJwtTokenService _jwtTokenService;
-        private readonly IRefreshTokenService _refreshTokenService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AuthController(IAuthQueryService authQueryService, IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
+        public AuthController(IAuthenticationService authenticationService)
         {
-            _authQueryService = authQueryService;
-            _jwtTokenService = jwtTokenService;
-            _refreshTokenService = refreshTokenService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
@@ -29,26 +25,24 @@ namespace AuthenticApi.Controllers.Api
         {
             try
             {
-                var user = await _authQueryService.Logon(loginDTO);
-                var token = _jwtTokenService.GenerateToken(user);
-                var refreshToken = await _refreshTokenService.Generate(user, "external_app");
-
-                return Ok(new TokenDTO
-                {
-                    Token = token,
-                    RefreshToken = refreshToken.TokenHash
-                });
-
+                var result = await _authenticationService.LoginAsync(loginDTO);
+                return Ok(result);
             }
-            catch (Exception ex)
+            catch (InvalidCredentialsException ex)
             {
-                return Content(
-                                HttpStatusCode.Unauthorized,
-                                new
-                                {
-                                    ex.Message
-                                }
-                            );
+                return Content(HttpStatusCode.Unauthorized, new { ex.Message });
+            }
+            catch (UserBlockedException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (ForbiddenSoftwareAccessException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (Exception)
+            {
+                return Content(HttpStatusCode.Unauthorized, new { Message = "Erro interno" } );
             }
         }
 
@@ -58,33 +52,24 @@ namespace AuthenticApi.Controllers.Api
         {
             try
             {
-                var result = await _refreshTokenService.RefreshAsync(
-                refreshTokenDTO.RefreshToken,
-                refreshTokenDTO.DeviceId);
-
-                var userLoged = new UserLogedDTO { 
-                    Id = result.User.Id,
-                    Email = result.User.Email,
-                    Name = result.User.Name,
-                    NickName = result.User.NickName
-                };
-                var token = _jwtTokenService.GenerateToken(userLoged);
-
-                return Ok(new TokenDTO
-                {
-                    Token = token,
-                    RefreshToken = result.TokenHash
-                });
+                var result = await _authenticationService.RefreshAsync(refreshTokenDTO.RefreshToken, refreshTokenDTO.DeviceId);
+                return Ok(result);
             }
-            catch (Exception ex)
+            catch (NotFoundRefreshTokenException ex)
             {
-                return Content(
-                                HttpStatusCode.BadRequest,
-                                new
-                                {
-                                    ex.Message
-                                }
-                            );
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (DisabledRefreshTokenException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (IncisiveRefreshTokenException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (Exception)
+            {
+                return Content(HttpStatusCode.BadRequest,new { Message = "Erro interno" } );
             }
         }
 
@@ -98,24 +83,28 @@ namespace AuthenticApi.Controllers.Api
                 string nameIdentifier = claimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (int.TryParse(nameIdentifier, out int userId))
                 {
-                    await _refreshTokenService.RevokeTokenAsync(refreshTokenDTO.RefreshToken, refreshTokenDTO.DeviceId);
+                    await _authenticationService.LogoutAsync(refreshTokenDTO.RefreshToken, refreshTokenDTO.DeviceId);
                     return Ok("Revogado tokens do usuário");
                 }
             }
-            catch (Exception ex)
+            catch (NotFoundRefreshTokenException ex)
             {
-                return Content(
-                                HttpStatusCode.BadRequest,
-                                new
-                                {
-                                    ex.Message
-                                }
-                            );
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
             }
-            return Content(
-                                HttpStatusCode.BadRequest, 
-                                "Usuário não identificado"
-                          );
+            catch (DisabledRefreshTokenException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (IncisiveRefreshTokenException ex)
+            {
+                return Content(HttpStatusCode.Forbidden, new { ex.Message });
+            }
+            catch (Exception)
+            {
+                return Content(HttpStatusCode.BadRequest, new { Message = "Erro interno" });
+            }
+
+            return Content(HttpStatusCode.BadRequest,"Usuário não identificado");
         }
 
     }

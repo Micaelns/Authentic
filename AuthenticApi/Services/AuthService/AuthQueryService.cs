@@ -2,6 +2,7 @@
 using AuthenticApi.DTOs.Auth;
 using AuthenticApi.DTOs.Roles;
 using AuthenticApi.DTOs.Users;
+using AuthenticApi.Exceptions;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
@@ -41,18 +42,18 @@ namespace AuthenticApi.Services.AuthService
                 })
                 .FirstOrDefaultAsync();
 
-            if (user is null || IsAuthenticate(user, loginDTO)){
-                throw new Exception("Email e/ou senha incorreto(s)");
+            if (user is null || IsPasswordInvalid(user, loginDTO)){
+                throw new InvalidCredentialsException();
             }
 
             if (user.IsBlocked == true)
             {
-                throw new Exception("Usuário Bloqueado temporariamente");
+                throw new UserBlockedException();
             }
 
             if ( loginDTO.SoftwareId != 0 && !user.Roles.Any( item => item.SoftwareId == loginDTO.SoftwareId ))
             {
-                throw new Exception("Usuário sem acesso a esse sistema. Fale com um Adminstrador.");
+                throw new ForbiddenSoftwareAccessException();
             }
 
             return new UserLogedDTO
@@ -64,7 +65,7 @@ namespace AuthenticApi.Services.AuthService
             };
         }
 
-        private bool IsAuthenticate(UserLogingDTO user, LoginDTO loginDTO)
+        private bool IsPasswordInvalid(UserLogingDTO user, LoginDTO loginDTO)
         {
             var result = _passwordHasher.VerifyHashedPassword(
                 user.PasswordHash,
@@ -72,11 +73,6 @@ namespace AuthenticApi.Services.AuthService
             );
 
             return result == PasswordVerificationResult.Failed;
-        }
-
-        public Task Logout(string token)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

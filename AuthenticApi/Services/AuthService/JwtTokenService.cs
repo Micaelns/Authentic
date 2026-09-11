@@ -1,4 +1,5 @@
-﻿using AuthenticApi.DTOs.Users;
+﻿using Authentic_Api.Models.Entities;
+using AuthenticApi.DTOs.Users;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;

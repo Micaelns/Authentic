@@ -1,12 +1,11 @@
 ﻿using Authentic_Api.Models.Entities;
 using AuthenticApi.App_Data;
 using AuthenticApi.DTOs.Users;
-using AuthenticApi.Mappings;
+using AuthenticApi.Exceptions;
 using System;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace AuthenticApi.Services.AuthService
@@ -14,33 +13,37 @@ namespace AuthenticApi.Services.AuthService
     public class RefreshTokenService : IRefreshTokenService
     {
         private readonly AuthenticContext _context;
-        private readonly ITokenGenerator _tokenGenerator;
+        private readonly IRefreshTokenGenerator _refreshTokenGenerator;
+        private readonly ITokenHasher _tokenHasher;
 
-        public RefreshTokenService( AuthenticContext context, ITokenGenerator tokenGenerator)
+        public RefreshTokenService(AuthenticContext context, IRefreshTokenGenerator refreshTokenGenerator, ITokenHasher tokenHasher)
         {
             _context = context;
-            _tokenGenerator = tokenGenerator;
-        }
-        
-        public async Task<RefreshToken> Generate(UserLogedDTO user, string deviceId)
-        {
-            var currentUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
-            var newToken = await Generate(currentUser, deviceId);
-            await SaveAsync(newToken);
-            return newToken;
+            _refreshTokenGenerator = refreshTokenGenerator;
+            _tokenHasher = tokenHasher;
         }
 
-        private async Task<RefreshToken> Generate(User user, string deviceId)
+        public async Task<string> Generate(UserLogedDTO user, string deviceId)
+        {
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+            return await Generate(currentUser, deviceId, null);
+        }
+
+        private async Task<string> Generate(User user, string deviceId, RefreshToken refreshTokenToRevoke)
         {
             if (!int.TryParse(ConfigurationManager.AppSettings["JwtDaysToExpire"], out int daysToExpire))
             {
                 daysToExpire = 1;
             }
-            
-            var tokenGenerated = _tokenGenerator.Generate();
-            var token = RefreshToken.Create(user, tokenGenerated, deviceId, daysToExpire);
-            
-            return token;
+
+            var refreshTokenGenerated = _refreshTokenGenerator.Generate();
+            var refreshTokenHash = _tokenHasher.Hash(refreshTokenGenerated);
+            var refreshToken = RefreshToken.Create(user, refreshTokenHash, deviceId, daysToExpire);
+
+            refreshTokenToRevoke?.Revoke(refreshTokenHash);
+            await SaveAsync(refreshToken);
+
+            return refreshTokenGenerated;
         }
 
         private async Task SaveAsync(RefreshToken token)
@@ -49,40 +52,42 @@ namespace AuthenticApi.Services.AuthService
             await _context.SaveChangesAsync();
         }
 
-        public async Task<RefreshToken> RefreshAsync(string refreshToken, string deviceId)
+        public async Task<(User,string)> RotateAsync(string refreshToken, string deviceId)
         {
-            var token = await GetByHashAsync(refreshToken) ?? throw new Exception("RefreshToken não existe");
+            var refreshTokenHash = _tokenHasher.Hash(refreshToken);
+            var refreshTokenObj = await GetRefreshTokenByHashAsync(refreshTokenHash) ?? throw new NotFoundRefreshTokenException();
 
-            if(!token.IsActive)
+            if (!refreshTokenObj.IsActive)
             {
-                await RevokeAllUserTokensAsync(token.User.Id);
-                throw new Exception("RefreshToken não é válido");
+                await RevokeAllUserTokensAsync(refreshTokenObj.User.Id);
+                throw new DisabledRefreshTokenException();
             }
 
-            if (token.DeviceId != deviceId)
+            if (refreshTokenObj.DeviceId != deviceId)
             {
-                throw new Exception("RefreshToken inconsistente");
+                throw new IncisiveRefreshTokenException();
             }
 
-            var newToken = await Generate(token.User, deviceId);
-            token.Revoke(newToken.TokenHash);
-            await SaveAsync(newToken);
-            return newToken;
+            var newRefreshToken = await Generate(refreshTokenObj.User, deviceId, refreshTokenObj);
+            return (refreshTokenObj.User, newRefreshToken);
         }
 
         public async Task RevokeTokenAsync(string refreshToken, string deviceId)
         {
+            var refreshTokenHash = _tokenHasher.Hash(refreshToken);
             var rToken = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.TokenHash == refreshToken) ?? throw new Exception("RefreshToken não existe");
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(x => x.TokenHash == refreshTokenHash) ?? throw new NotFoundRefreshTokenException();
 
             if (!rToken.IsActive)
             {
-                throw new Exception("RefreshToken já está inativo");
+                await RevokeAllUserTokensAsync(rToken.User.Id);
+                throw new DisabledRefreshTokenException();
             }
 
             if (rToken.DeviceId != deviceId)
             {
-                throw new Exception("RefreshToken inconsistente");
+                throw new IncisiveRefreshTokenException();
             }
 
             rToken.Revoke();
@@ -90,7 +95,7 @@ namespace AuthenticApi.Services.AuthService
             await _context.SaveChangesAsync();
         }
 
-        private async Task<RefreshToken> GetByHashAsync(string hash)
+        private async Task<RefreshToken> GetRefreshTokenByHashAsync(string hash)
         {
             return await _context.RefreshTokens
                 .Include(c => c.User)

@@ -1,4 +1,5 @@
-﻿using Authentic_Api.Models.ViewModels;
+﻿using Authentic_Api.Models.Entities;
+using Authentic_Api.Models.ViewModels;
 using AuthenticApi.DTOs.Users;
 using System.Linq;
 
@@ -34,6 +35,17 @@ namespace AuthenticApi.Mappings
                         Description = itemPermission.Description
                     }).ToList()
                 })
+            };
+        }
+
+        public static UserLogedDTO ToUserLogedDTO(User user)
+        {
+            return new UserLogedDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                NickName = user.NickName
             };
         }
     }

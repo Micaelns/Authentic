@@ -240,6 +240,12 @@
     <Compile Include="DTOs\Users\UserDTO.cs" />
     <Compile Include="DTOs\Users\UserLogedDTO.cs" />
     <Compile Include="DTOs\Users\UserLogingDTO.cs" />
+    <Compile Include="Exceptions\DisabledRefreshTokenException.cs" />
+    <Compile Include="Exceptions\ForbiddenSoftwareAccessException.cs" />
+    <Compile Include="Exceptions\IncisiveRefreshTokenException.cs" />
+    <Compile Include="Exceptions\InvalidCredentialsException.cs" />
+    <Compile Include="Exceptions\NotFoundRefreshTokenException.cs" />
+    <Compile Include="Exceptions\UserBlockedException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -278,14 +284,18 @@
     <Compile Include="Models\ViewModels\UserSoftwareViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AuthService\AuthenticationService.cs" />
     <Compile Include="Services\AuthService\AuthQueryService.cs" />
+    <Compile Include="Services\AuthService\IAuthenticationService.cs" />
     <Compile Include="Services\AuthService\IAuthQueryService.cs" />
     <Compile Include="Services\AuthService\IJwtTokenService.cs" />
     <Compile Include="Services\AuthService\IRefreshTokenService.cs" />
-    <Compile Include="Services\AuthService\ITokenGenerator.cs" />
+    <Compile Include="Services\AuthService\IRefreshTokenGenerator.cs" />
+    <Compile Include="Services\AuthService\ITokenHasher.cs" />
     <Compile Include="Services\AuthService\JwtTokenService.cs" />
     <Compile Include="Services\AuthService\RefreshTokenService.cs" />
-    <Compile Include="Services\AuthService\TokenGenerator.cs" />
+    <Compile Include="Services\AuthService\RefreshTokenGenerator.cs" />
+    <Compile Include="Services\AuthService\Sha256TokenHasher.cs" />
     <Compile Include="Services\PermissionService\IPermissionQueryService.cs" />
     <Compile Include="Services\PermissionService\PermissionQueryService.cs" />
     <Compile Include="Services\RoleService\IRoleCommandService.cs" />

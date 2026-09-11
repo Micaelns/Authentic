@@ -1,6 +1,6 @@
 ﻿namespace AuthenticApi.Services.AuthService
 {
-    public interface ITokenGenerator
+    public interface IRefreshTokenGenerator
     {
         string Generate();
     }
