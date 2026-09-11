@@ -231,6 +231,7 @@
     <Compile Include="Controllers\SoftwareController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DTOs\Auth\LoginDTO.cs" />
+    <Compile Include="DTOs\Auth\RefreshTokenDTO.cs" />
     <Compile Include="DTOs\Auth\TokenDTO.cs" />
     <Compile Include="DTOs\Roles\RoleDTO.cs" />
     <Compile Include="DTOs\Roles\RoleListPermissionDTO.cs" />
@@ -247,6 +248,10 @@
     <Compile Include="Migrations\202608080354181_InitialCreate.cs" />
     <Compile Include="Migrations\202608080354181_InitialCreate.Designer.cs">
       <DependentUpon>202608080354181_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609100345031_TableRefreshToken.cs" />
+    <Compile Include="Migrations\202609100345031_TableRefreshToken.Designer.cs">
+      <DependentUpon>202609100345031_TableRefreshToken.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Seeds\PermissionSeed.cs" />
@@ -276,7 +281,11 @@
     <Compile Include="Services\AuthService\AuthQueryService.cs" />
     <Compile Include="Services\AuthService\IAuthQueryService.cs" />
     <Compile Include="Services\AuthService\IJwtTokenService.cs" />
+    <Compile Include="Services\AuthService\IRefreshTokenService.cs" />
+    <Compile Include="Services\AuthService\ITokenGenerator.cs" />
     <Compile Include="Services\AuthService\JwtTokenService.cs" />
+    <Compile Include="Services\AuthService\RefreshTokenService.cs" />
+    <Compile Include="Services\AuthService\TokenGenerator.cs" />
     <Compile Include="Services\PermissionService\IPermissionQueryService.cs" />
     <Compile Include="Services\PermissionService\PermissionQueryService.cs" />
     <Compile Include="Services\RoleService\IRoleCommandService.cs" />
@@ -430,6 +439,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202608080354181_InitialCreate.resx">
       <DependentUpon>202608080354181_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609100345031_TableRefreshToken.resx">
+      <DependentUpon>202609100345031_TableRefreshToken.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

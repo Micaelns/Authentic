@@ -1,8 +1,8 @@
 ﻿namespace AuthenticApi.DTOs.Auth
 {
-    public class TokenDTO
+    public class RefreshTokenDTO
     {
-        public string Token { get; set; }
         public string RefreshToken { get; set; } = string.Empty;
+        public string DeviceId { get; set; } = string.Empty;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AuthenticApi.DTOs.Auth;
+using AuthenticApi.DTOs.Users;
 using AuthenticApi.Services.AuthService;
 using System;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -12,11 +14,13 @@ namespace AuthenticApi.Controllers.Api
     {
         private readonly IAuthQueryService _authQueryService;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public AuthController(IAuthQueryService authQueryService, IJwtTokenService jwtTokenService)
+        public AuthController(IAuthQueryService authQueryService, IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
         {
             _authQueryService = authQueryService;
             _jwtTokenService = jwtTokenService;
+            _refreshTokenService = refreshTokenService;
         }
 
         [HttpPost]
@@ -27,10 +31,12 @@ namespace AuthenticApi.Controllers.Api
             {
                 var user = await _authQueryService.Logon(loginDTO);
                 var token = _jwtTokenService.GenerateToken(user);
+                var refreshToken = await _refreshTokenService.Generate(user, "external_app");
 
                 return Ok(new TokenDTO
                 {
-                    Token = token
+                    Token = token,
+                    RefreshToken = refreshToken.TokenHash
                 });
 
             }
@@ -38,7 +44,43 @@ namespace AuthenticApi.Controllers.Api
             {
                 return Content(
                                 HttpStatusCode.Unauthorized,
-                                new 
+                                new
+                                {
+                                    ex.Message
+                                }
+                            );
+            }
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<IHttpActionResult> Refresh(RefreshTokenDTO refreshTokenDTO)
+        {
+            try
+            {
+                var result = await _refreshTokenService.RefreshAsync(
+                refreshTokenDTO.RefreshToken,
+                refreshTokenDTO.DeviceId);
+
+                var userLoged = new UserLogedDTO { 
+                    Id = result.User.Id,
+                    Email = result.User.Email,
+                    Name = result.User.Name,
+                    NickName = result.User.NickName
+                };
+                var token = _jwtTokenService.GenerateToken(userLoged);
+
+                return Ok(new TokenDTO
+                {
+                    Token = token,
+                    RefreshToken = result.TokenHash
+                });
+            }
+            catch (Exception ex)
+            {
+                return Content(
+                                HttpStatusCode.BadRequest,
+                                new
                                 {
                                     ex.Message
                                 }
@@ -48,10 +90,32 @@ namespace AuthenticApi.Controllers.Api
 
         [HttpPost]
         [Route("logout")]
-        public IHttpActionResult Logout()
+        public async Task<IHttpActionResult> Logout(RefreshTokenDTO refreshTokenDTO)
         {
-            var temp = "micael Nunes - logout";
-            return Ok(temp);
+            try
+            {
+                var claimsPrincipal = User as ClaimsPrincipal;
+                string nameIdentifier = claimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(nameIdentifier, out int userId))
+                {
+                    await _refreshTokenService.RevokeTokenAsync(refreshTokenDTO.RefreshToken, refreshTokenDTO.DeviceId);
+                    return Ok("Revogado tokens do usuário");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content(
+                                HttpStatusCode.BadRequest,
+                                new
+                                {
+                                    ex.Message
+                                }
+                            );
+            }
+            return Content(
+                                HttpStatusCode.BadRequest, 
+                                "Usuário não identificado"
+                          );
         }
 
     }
