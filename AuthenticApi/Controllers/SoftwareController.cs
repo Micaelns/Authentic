@@ -17,7 +17,7 @@ namespace AuthenticApi.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var softwares= await _softwareQueryService.GetAllActives();
+            var softwares = await _softwareQueryService.GetAllActives();
             return View(softwares);
         }
 

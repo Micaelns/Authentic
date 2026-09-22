@@ -16,12 +16,18 @@ namespace AuthenticApi
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            AllRoutesDefaultBlocked(config);
 
-            // JSON como padrão
-            config.Formatters.JsonFormatter.SupportedMediaTypes
+           // JSON como padrão
+           config.Formatters.JsonFormatter.SupportedMediaTypes
                 .Add(new MediaTypeHeaderValue("text/html"));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+        }
+
+        private static void AllRoutesDefaultBlocked(HttpConfiguration config)
+        {
+            config.Filters.Add(new AuthorizeAttribute());
         }
     }
 }

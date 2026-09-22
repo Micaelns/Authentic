@@ -4,11 +4,11 @@ using System.Web.Http;
 
 namespace AuthenticApi.Controllers.Api
 {
-    public class UsersController : ApiController
+    public class UserController : ApiController
     {
         private readonly IUserQueryService _userQueryService;
 
-        public UsersController(IUserQueryService userQueryService)
+        public UserController(IUserQueryService userQueryService)
         {
             _userQueryService = userQueryService;
         }
