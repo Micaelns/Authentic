@@ -11,6 +11,8 @@ namespace AuthenticApi.Migrations.Seeds
             ExecuteAdminRole(context);
             ExecuteDriveRole(context);
             ExecuteDefaultRole(context);
+
+            context.SaveChanges();
         }
 
         private static void ExecuteDefaultRole(AuthenticContext context)
@@ -94,20 +96,35 @@ namespace AuthenticApi.Migrations.Seeds
             var startVehicleTravel = context.Permissions
                 .First(x => x.Code == "start.vehicleTravel");
 
+            var listVehicleTravel = context.Permissions
+                .First(x => x.Code == "list.vehicleTravel"); 
+
             var endsVehicleTravel = context.Permissions
                 .First(x => x.Code == "ends.vehicleTravel");
 
             var findVehicleTravel = context.Permissions
                 .First(x => x.Code == "find.vehicleType");
 
-            var hanckinEconomyVehicleTravel = context.Permissions
-                .First(x => x.Code == "hankingEconomy.vehicleTravel");
+            var ranckinEconomyVehicleTravel = context.Permissions
+                .First(x => x.Code == "rankingEconomy.vehicleTravel");
 
-            var hankingMilageVehicleTravel = context.Permissions
-                .First(x => x.Code == "hankingMilage.vehicleTravel");
+            var rankingMilageVehicleTravel = context.Permissions
+                .First(x => x.Code == "rankingMilage.vehicleTravel");
 
             var reportsVehicleTravel = context.Permissions
                 .First(x => x.Code == "reports.vehicleTravel");
+
+            var createDriver = context.Permissions
+                .First(x => x.Code == "create.driver");
+
+            var listDriver = context.Permissions
+                .First(x => x.Code == "list.driver");
+
+            var findDriver = context.Permissions
+                .First(x => x.Code == "find.driver");
+
+            var rankingTravelDriver = context.Permissions
+                .First(x => x.Code == "ranking.travelDriver");
 
             ExecuteNewPermission(context, adminRole.Id, createDestination.Id);
             ExecuteNewPermission(context, adminRole.Id, listDestination.Id);
@@ -115,15 +132,21 @@ namespace AuthenticApi.Migrations.Seeds
             ExecuteNewPermission(context, adminRole.Id, updateVehicleType.Id);
             ExecuteNewPermission(context, adminRole.Id, deleteVehicleType.Id);
             ExecuteNewPermission(context, adminRole.Id, createVehicle.Id);
+            ExecuteNewPermission(context, adminRole.Id, listVehicleTravel.Id);
             ExecuteNewPermission(context, adminRole.Id, startVehicleTravel.Id);
             ExecuteNewPermission(context, adminRole.Id, endsVehicleTravel.Id);
             ExecuteNewPermission(context, adminRole.Id, listVehicle.Id);
             ExecuteNewPermission(context, adminRole.Id, listVehicleType.Id);
             ExecuteNewPermission(context, adminRole.Id, findVehicleType.Id);
             ExecuteNewPermission(context, adminRole.Id, findVehicleTravel.Id);
-            ExecuteNewPermission(context, adminRole.Id, hanckinEconomyVehicleTravel.Id);
-            ExecuteNewPermission(context, adminRole.Id, hankingMilageVehicleTravel.Id);
+            ExecuteNewPermission(context, adminRole.Id, ranckinEconomyVehicleTravel.Id);
+            ExecuteNewPermission(context, adminRole.Id, rankingMilageVehicleTravel.Id);
             ExecuteNewPermission(context, adminRole.Id, reportsVehicleTravel.Id);
+            ExecuteNewPermission(context, adminRole.Id, createDriver.Id);
+            ExecuteNewPermission(context, adminRole.Id, listDriver.Id);
+            ExecuteNewPermission(context, adminRole.Id, findDriver.Id);
+            ExecuteNewPermission(context, adminRole.Id, rankingTravelDriver.Id);
+
         }
 
         private static void ExecuteNewPermission(AuthenticContext context, int roleId, int permissionId)

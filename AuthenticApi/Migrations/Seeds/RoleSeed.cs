@@ -27,6 +27,7 @@ namespace AuthenticApi.Migrations.Seeds
                     SoftwareId = 1
                 }
             );
+            context.SaveChanges();
         }
     }
 }

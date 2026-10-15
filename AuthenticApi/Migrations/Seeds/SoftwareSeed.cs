@@ -17,6 +17,8 @@ namespace AuthenticApi.Migrations.Seeds
                     Description = "Sistema de Frota de Caminhões - Logística"
                 }
             );
+
+            context.SaveChanges();
         }
     }
 }

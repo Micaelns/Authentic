@@ -73,20 +73,46 @@ namespace AuthenticApi.Migrations.Seeds
                 },
                 new Permission
                 {
-                    Code = "hankingEconomy.vehicleTravel",
-                    Description = "Listar Hanking Econômico do Veículo"
+                    Code = "list.vehicleTravel",
+                    Description = "Listar Viagens do Veículo"
                 },
                 new Permission
                 {
-                    Code = "hankingMilage.vehicleTravel",
-                    Description = "Listar Hanking quilometragem do Veículo"
+                    Code = "rankingEconomy.vehicleTravel",
+                    Description = "Listar Ranking Econômico do Veículo"
+                },
+                new Permission
+                {
+                    Code = "rankingMilage.vehicleTravel",
+                    Description = "Listar Ranking quilometragem do Veículo"
                 },
                 new Permission
                 {
                     Code = "reports.vehicleTravel",
                     Description = "Relatório do Viagem do Veículo"
+                },
+                new Permission
+                {
+                    Code = "create.driver",
+                    Description = "Criar Motorista"
+                },
+                new Permission
+                {
+                    Code = "list.driver",
+                    Description = "Listar Motorista"
+                },
+                new Permission
+                {
+                    Code = "find.driver",
+                    Description = "Buscar Motorista"
+                },
+                new Permission
+                {
+                    Code = "ranking.travelDriver",
+                    Description = "Listar Ranking de Viagens do Motorista"
                 }
             );
+            context.SaveChanges();
         }
     }
 }

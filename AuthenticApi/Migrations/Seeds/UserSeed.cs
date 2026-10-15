@@ -20,6 +20,8 @@ namespace AuthenticApi.Migrations.Seeds
                 }
             );
 
+            context.SaveChanges();
+
         }
     }
 }
